@@ -42,6 +42,16 @@ app.use('/api/v1/dashboard', dashboardRouter);
 app.use('/api/v1/public', publicRouter);
 app.use('/api/v1/admin/monitoring', monitoringRouter);
 
+// Root Route for basic health check/welcome message
+app.get('/', (req, res) => {
+  res.status(200).json({
+    name: 'SSK Protection Command API',
+    version: '1.0.0',
+    status: 'online',
+    message: 'Welcome to the Aegis Command API',
+  });
+});
+
 // Centralized Error Handling (Must be the last middleware)
 app.use(errorHandler);
 
