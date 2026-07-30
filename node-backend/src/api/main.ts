@@ -7,7 +7,7 @@ import { prisma } from '../infrastructure/database/prisma';
 
 const PORT = process.env.PORT || 8080;
 
-const server = app.listen(PORT, () => {
+const server = app.listen(Number(PORT), '0.0.0.0', () => {
   logger.info(`Server listening on port ${PORT} in ${process.env.NODE_ENV} mode`);
 });
 

@@ -6,6 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 export const apiClient = axios.create({
   baseURL: API_URL,
   withCredentials: true, // For sending HTTPOnly cookies (refresh token)
+  timeout: 10000, // Timeout after 10 seconds instead of hanging forever
   headers: {
     'Content-Type': 'application/json',
   },
