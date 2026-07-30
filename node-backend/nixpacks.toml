@@ -1,0 +1,11 @@
+[providers]
+  node = "node"
+
+[phases.setup]
+  nixPkgs = ["...", "openssl"]
+
+[phases.build]
+  cmds = ["npm run build"]
+
+[start]
+  cmd = "npm run start"
