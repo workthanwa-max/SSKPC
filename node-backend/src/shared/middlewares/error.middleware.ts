@@ -19,7 +19,6 @@ export const errorHandler = (
 
   // Handle unexpected errors (Programming errors, external service crashes)
   logger.error({ err, req }, 'Unexpected Server Error');
-  fs.appendFileSync('error-log.txt', new Date().toISOString() + '\\n' + String(err.stack) + '\\n\\n');
   
   return res.status(500).json({
     success: false,
