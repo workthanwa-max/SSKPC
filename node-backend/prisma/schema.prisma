@@ -1,0 +1,143 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [postgis]
+}
+
+enum Role {
+  ADMIN
+  CENTRAL
+  BRANCH
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(BRANCH)
+  status    UserStatus @default(ACTIVE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  location          BranchLocation?
+  stockCategories   StockCategory[]
+  stockProducts     StockProduct[]
+  stockTransactions StockTransaction[]
+}
+
+model BranchLocation {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  name        String
+  description String?  @db.Text
+  latitude    Float
+  longitude   Float
+  geom        Unsupported("geometry(Point, 4326)")?
+  isReady     Boolean  @default(true) // Status for accepting evacuees
+  
+  capacity    Int?
+  specInfo    String?  @db.Text
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  evacuees    Evacuee[]
+}
+
+enum TransactionType {
+  INBOUND
+  OUTBOUND
+}
+
+model StockCategory {
+  id          String   @id @default(cuid())
+  name        String
+  description String?  @db.Text
+  isCritical  Boolean  @default(false)
+  isSystem    Boolean  @default(false)
+  ownerId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  owner       User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  products    StockProduct[]
+}
+
+model StockProduct {
+  id          String   @id @default(cuid())
+  name        String
+  sku         String?
+  description String?  @db.Text
+  quantity    Int      @default(0)
+  unit        String
+  dailyConsumptionRate Float?
+  categoryId  String
+  ownerId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  category    StockCategory      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  owner       User               @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  transactions StockTransaction[]
+}
+
+model StockTransaction {
+  id          String   @id @default(cuid())
+  type        TransactionType
+  quantity    Int
+  note        String?  @db.Text
+  productId   String
+  ownerId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  product     StockProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  owner       User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+}
+
+enum EvacueeStatus {
+  IN_SHELTER
+  CHECKED_OUT
+}
+
+model Evacuee {
+  id               String        @id @default(cuid())
+  registrationCode String        @unique
+  name             String
+  gender           String?
+  type             String?
+  basicInfo        String?       @db.Text
+  status           EvacueeStatus @default(IN_SHELTER)
+  
+  checkInAt        DateTime      @default(now())
+  checkOutAt       DateTime?
+  
+  branchLocationId String
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  branchLocation   BranchLocation @relation(fields: [branchLocationId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String   // e.g., LOGIN_FAILED, STOCK_ADJUST, EVACUEE_DELETE
+  userId    String?  // Optional because some actions (like failed login) might not have a resolved userId
+  ipAddress String?
+  metadata  Json?    // Store redacted details
+  createdAt DateTime @default(now())
+
+  // We do not add an updatedAt field to enforce append-only/immutability concept at the schema level.
+}
