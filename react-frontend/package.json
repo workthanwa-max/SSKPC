@@ -13,7 +13,7 @@
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
-    "start": "npx serve -s dist"
+    "start": "vite preview --port $PORT --host 0.0.0.0"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
