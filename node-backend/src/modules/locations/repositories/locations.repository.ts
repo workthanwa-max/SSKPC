@@ -5,7 +5,7 @@ export class LocationsRepository {
   constructor(private prisma: PrismaClient) {}
 
   async create(userId: string, data: LocationDto): Promise<BranchLocation> {
-    const location = await this.prisma.branchLocation.create({
+    return this.prisma.branchLocation.create({
       data: {
         userId,
         name: data.name,
@@ -14,13 +14,10 @@ export class LocationsRepository {
         longitude: data.longitude,
       },
     });
-    
-    await this.updateGeometry(location.id, data.longitude, data.latitude);
-    return location;
   }
 
   async update(userId: string, data: LocationDto): Promise<BranchLocation> {
-    const location = await this.prisma.branchLocation.update({
+    return this.prisma.branchLocation.update({
       where: { userId },
       data: {
         name: data.name,
@@ -29,9 +26,6 @@ export class LocationsRepository {
         longitude: data.longitude,
       },
     });
-    
-    await this.updateGeometry(location.id, data.longitude, data.latitude);
-    return location;
   }
 
   async updateStatus(userId: string, isReady: boolean): Promise<BranchLocation> {
@@ -39,14 +33,6 @@ export class LocationsRepository {
       where: { userId },
       data: { isReady },
     });
-  }
-  
-  private async updateGeometry(id: string, lng: number, lat: number) {
-    await this.prisma.$executeRaw`
-      UPDATE "BranchLocation"
-      SET geom = ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)
-      WHERE id = ${id}
-    `;
   }
 
   async findByUserId(userId: string): Promise<BranchLocation | null> {

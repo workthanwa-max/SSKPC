@@ -58,12 +58,6 @@ async function main() {
         },
       });
 
-      // Update PostGIS geometry
-      await prisma.$executeRaw`
-        UPDATE "BranchLocation"
-        SET geom = ST_SetSRID(ST_MakePoint(${b.lng}, ${b.lat}), 4326)
-        WHERE id = ${location.id}
-      `;
     }
   }
 
@@ -81,11 +75,6 @@ async function main() {
         specInfo: 'ศูนย์พักพิงชั่วคราว อาคารอเนกประสงค์ มีเต็นท์ 100 หลัง ห้องน้ำ 20 ห้อง รองรับผู้ป่วยได้ 50 เตียง'
       }
     });
-    await prisma.$executeRaw`
-      UPDATE "BranchLocation"
-      SET geom = ST_SetSRID(ST_MakePoint(100.5018, 13.7563), 4326)
-      WHERE id = ${firstBranchLocation.id}
-    `;
   }
 
   // --- Seed Stock Data ---
