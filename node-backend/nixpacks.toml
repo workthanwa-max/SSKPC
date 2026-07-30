@@ -2,7 +2,7 @@
   node = "node"
 
 [phases.setup]
-  nixPkgs = ["...", "openssl"]
+  nixPkgs = ["...", "openssl", "openssl_1_1"]
 
 [phases.build]
   cmds = ["npm run build"]
