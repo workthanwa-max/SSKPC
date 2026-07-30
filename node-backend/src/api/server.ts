@@ -14,7 +14,7 @@ import { stockRouter } from '../modules/stock/stock.routes';
 import { evacueesRouter } from '../modules/evacuees/evacuees.routes';
 import { analyticsRouter } from '../modules/analytics/analytics.routes';
 import { dashboardRouter } from '../modules/dashboard/dashboard.routes';
-import { publicRouter } from '../modules/public/public.routes';
+import { publicRouter } from '../modules/public-api/public.routes';
 import { monitoringRouter } from '../modules/monitoring/monitoring.routes';
 
 const app = express();

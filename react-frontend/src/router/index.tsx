@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { DashboardLayout } from '../layouts/DashboardLayout';
 import { ProtectedRoute } from './ProtectedRoute';
-import PublicHome from '../pages/public/PublicHome';
+import PublicHome from '../pages/public-pages/PublicHome';
 import Login from '../pages/auth/Login';
 import AdminHome from '../pages/admin/AdminHome';
 import UserManagement from '../pages/admin/UserManagement';
