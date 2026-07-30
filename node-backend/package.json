@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/api/main.ts",
     "db:push": "npx prisma db push",
-    "build": "tsc",
+    "build": "npx prisma generate && tsc",
     "start": "node dist/api/main.js",
     "seed:users": "ts-node prisma/seed-users.ts",
     "seed:demo": "ts-node prisma/seed-demo.ts"
