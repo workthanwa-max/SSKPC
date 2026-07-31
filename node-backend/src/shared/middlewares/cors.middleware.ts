@@ -1,10 +1,14 @@
 import cors from 'cors';
 
 const allowedOrigins = [
-  process.env.CORS_ORIGIN || 'http://localhost:5173',
+  'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:5175'
 ];
+
+if (process.env.CORS_ORIGIN) {
+  allowedOrigins.push(process.env.CORS_ORIGIN);
+}
 
 export const corsMiddleware = cors({
   origin: (origin, callback) => {
