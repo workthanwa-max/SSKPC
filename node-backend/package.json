@@ -9,11 +9,11 @@
     "db:push": "npx prisma db push",
     "build": "npx prisma generate && tsc",
     "start": "node dist/api/main.js",
-    "seed:users": "ts-node prisma/seed-users.ts",
-    "seed:demo": "ts-node prisma/seed-demo.ts"
+    "seed": "tsx prisma/seed.ts",
+    "seed:prod": "tsx prisma/seed.ts --prod"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed-users.ts"
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
