@@ -15,9 +15,12 @@ export class PublicService {
         COALESCE(
           (SELECT COUNT(*) FROM "Evacuee" e WHERE e."branchLocationId" = b.id AND e.status = 'IN_SHELTER'), 0
         )::int AS "currentOccupancy",
-        ST_DistanceSphere(
-          geom, 
-          ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)
+        (
+          6371000 * acos(
+            least(1.0, cos(radians(${lat})) * cos(radians(b.latitude)) *
+            cos(radians(b.longitude) - radians(${lng})) +
+            sin(radians(${lat})) * sin(radians(b.latitude)))
+          )
         ) AS "distanceMeters"
       FROM "BranchLocation" b
       ORDER BY "distanceMeters" ASC
