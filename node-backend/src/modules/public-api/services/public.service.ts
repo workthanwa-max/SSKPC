@@ -17,9 +17,11 @@ export class PublicService {
         )::int AS "currentOccupancy",
         (
           6371000 * acos(
-            least(1.0, cos(radians(${lat})) * cos(radians(b.latitude)) *
-            cos(radians(b.longitude) - radians(${lng})) +
-            sin(radians(${lat})) * sin(radians(b.latitude)))
+            greatest(-1.0, least(1.0, 
+              cos(radians(${lat}::float8)) * cos(radians(b.latitude)) *
+              cos(radians(b.longitude) - radians(${lng}::float8)) +
+              sin(radians(${lat}::float8)) * sin(radians(b.latitude))
+            ))
           )
         ) AS "distanceMeters"
       FROM "BranchLocation" b
