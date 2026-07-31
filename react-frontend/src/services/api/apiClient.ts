@@ -36,8 +36,8 @@ apiClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // If 401 Unauthorized and we haven't retried yet
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // If 401 Unauthorized and we haven't retried yet, AND it's not a login request
+    if (error.response?.status === 401 && !originalRequest._retry && originalRequest.url !== '/api/v1/auth/login') {
       originalRequest._retry = true;
       
       try {
